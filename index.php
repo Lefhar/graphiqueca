@@ -1,4 +1,17 @@
-<!DOCTYPE html>
+<?php
+include("db.php");
+$db = Database::connect();
+$req = $db->prepare('SELECT * FROM `ca` where year(date)=? ORDER by date');
+$req->execute(array(2022));
+$TabCa = $req->fetchAll();
+$TabMoyenne = array();
+foreach ($TabCa as $row){
+
+    //à tester SELECT  avg(ca)
+    //FROM ca
+    //where Date <= "2022-12-01" and Date >= Date_add("2022-12-01",interval - 12 month)
+}
+?><!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8">
@@ -15,20 +28,20 @@
         <div class="col-md-4">
             <canvas id="vertical"></canvas>
         </div>
-        <div class="col-md-4">
-            <canvas id="horizontal"></canvas>
-        </div>
-        <div class="col-md-4">
-            <canvas id="gauge"></canvas>
-        </div>
+<!--        <div class="col-md-4">-->
+<!--            <canvas id="horizontal"></canvas>-->
+<!--        </div>-->
+<!--        <div class="col-md-4">-->
+<!--            <canvas id="gauge"></canvas>-->
+<!--        </div>-->
 
 
     </div>
 </div>
 <script>
     const ctx = document.getElementById('vertical').getContext('2d');
-    const ctx2 = document.getElementById('horizontal').getContext('2d');
-    const ctx3 = document.getElementById('gauge').getContext('2d');
+    // const ctx2 = document.getElementById('horizontal').getContext('2d');
+    // const ctx3 = document.getElementById('gauge').getContext('2d');
     const mixedChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -49,48 +62,69 @@
             }],
             labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
         },
-        options: {}
-    });
-    const mixedChart2 = new Chart(ctx2, {
-        type: 'bar',
-        data: {
-            datasets: [{
-                label: 'CA du mois',
-                data: [6000, 5900, 8000, 8100, 6000, 5900, 8000, 8100, 7600, 4509, 8120, 8441],
-                backgroundColor: '#5b9bd5',
-                // this dataset is drawn below
-                order: 2
-            }, {
-                label: 'Moyenne CA',
-                data: [600, 590, 800, 810, 600, 590, 800, 810, 600, 1590, 800, 810],
-                backgroundColor: '#ed7d31',
-                borderColor: '#ed7d31',
-                type: 'line',
-                // this dataset is drawn on top
-                order: 1
-            }],
-            labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
-        },
-        options: {indexAxis: 'y'}
-    });
-
-    const mixedChart3 = new Chart(ctx3, {
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                label: 'CA du mois',
-                data: [6000, 5900, 8000, 8100, 6000, 5900, 8000, 8100, 7600, 4509, 8120, 8441],
-                backgroundColor: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-                // this dataset is drawn below
-
-            }],
-            labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
-        },
         options: {
-            rotation: 270,
-            circumference: 180
-        },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            var label = context.dataset.label || '';
+
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(context.parsed.y);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
     });
+
+
+
+    // const mixedChart2 = new Chart(ctx2, {
+    //     type: 'bar',
+    //     data: {
+    //         datasets: [{
+    //             label: 'CA du mois',
+    //             data: [6000, 5900, 8000, 8100, 6000, 5900, 8000, 8100, 7600, 4509, 8120, 8441],
+    //             backgroundColor: '#5b9bd5',
+    //             // this dataset is drawn below
+    //             order: 2
+    //         }, {
+    //             label: 'Moyenne CA',
+    //             data: [600, 590, 800, 810, 600, 590, 800, 810, 600, 1590, 800, 810],
+    //             backgroundColor: '#ed7d31',
+    //             borderColor: '#ed7d31',
+    //             type: 'line',
+    //             // this dataset is drawn on top
+    //             order: 1
+    //         }],
+    //         labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+    //     },
+    //     options: {indexAxis: 'y'}
+    // });
+    //
+    // const mixedChart3 = new Chart(ctx3, {
+    //     type: 'doughnut',
+    //     data: {
+    //         datasets: [{
+    //             label: 'CA du mois',
+    //             data: [6000, 5900, 8000, 8100, 6000, 5900, 8000, 8100, 7600, 4509, 8120, 8441],
+    //             backgroundColor: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    //             // this dataset is drawn below
+    //
+    //         }],
+    //         labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+    //     },
+    //     options: {
+    //         rotation: 270,
+    //         circumference: 180
+    //     },
+    // });
 
     //
     //
