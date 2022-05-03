@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/d3js.iml" filepath="$PROJECT_DIR$/.idea/d3js.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/chartjs.iml" filepath="$PROJECT_DIR$/.idea/chartjs.iml" />
     </modules>
   </component>
 </project>
