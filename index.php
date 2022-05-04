@@ -173,43 +173,87 @@ foreach ($TabCa as $row){
             }}
     });
 
-    const mixedChart3 = new Chart(ctx3, {
+
+
+    // setup
+    const data = {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         type: 'doughnut',
-        data: {
-            datasets: [{
-                label: 'CA du mois',
-                data: [6000, 5900, 8000, 8100, 6000, 5900, 8000, 8100, 7600, 4509, 8120, 8441],
-                backgroundColor: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-                // this dataset is drawn below
-
-            }],
-            labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
-        },
-        options: {
-            rotation: 270,
-            circumference: 180
-        },
-    });
-
-
-
-    var options = {
-        type: 'doughnut',
-        data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"]
-            }]
-        },
-        options: {
+        datasets: [{
+            label: 'Weekly Sales',
+            data: [18, 12, 6],
+            backgroundColor: [
+                'rgba(255, 26, 104, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(0, 0, 0, 0.2)'
+            ],
+            borderColor: 'white',
+            borderWidth: 2,
+            needleValue : 34,
+            cutout :'95%',
             rotation: 270, // start angle in degrees
             circumference: 180, // sweep angle in degrees
+        }]
+    };
+    const gaugeNeedle = {
+        id :'gaugeNeedle', afterDatasetDraw(chart, args,options){
+            const {ctx, config, data, chartArea:{top,bottom,left,right,width,height}} =chart;
+            ctx.save();
+            // console.log(data)
+            const needleValue = data.datasets[0].needleValue;
+           // console.log(needleValue)
+            const dataTotal = data.datasets[0].data.reduce((a, b) => a + b, 0);
+            //console.log(dataTotal)
+            const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI);
+
+            // var cw = chart.chart.canvas.offsetWidth;
+            // var ch = chart.chart.canvas.offsetHeight;
+            // var cx = cw / 2;
+            // var cy = ch - 6;
+            //console.log(angle)
+            console.log(ctx.canvas.offsetTop)
+
+            const cx = width /2;
+            const cy = chart._metasets[0].data[0].y;
+            ctx.translate(cx,cy);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.moveTo(0,-2);
+            ctx.lineTo(ctx.canvas.offsetTop - height +250 , 0);
+            ctx.lineTo(0,2);
+            ctx.fillStyle = '#444';
+            ctx.fill();
+
+            //needle dot
+            ctx.translate(-cx,-cy);
+            ctx.beginPath();
+            ctx.arc(cx,cy,5,0,10);
+            ctx.fill();
+            ctx.restore();
         }
     }
+    // config
+    const config = {
+        type: 'doughnut',
+        data,
+        options: {
 
-    new Chart(ctx3, options);
+
+        },
+        plugins: [gaugeNeedle]
+    };
+
+
+
+    const myChart = new Chart(
+        document.getElementById('gauge'),
+        config
+    );
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
