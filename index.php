@@ -182,7 +182,7 @@ foreach ($TabCa as $row){
         type: 'doughnut',
         datasets: [{
             label: 'Weekly Sales',
-            data: [90, 95,100],
+            data: [800000, 800000,1000000],
             backgroundColor: [
                 'rgba(54, 162, 235)',
                 'rgb(250,82,56)',
@@ -193,8 +193,8 @@ foreach ($TabCa as $row){
 
             borderColor: 'white',
             borderWidth: 4,
-            needleValue : 80,
-            cutout :'95%',
+            needleValue : 840000,
+            cutout :'80%',
             rotation: 270, // start angle in degrees
             circumference: 180, // sweep angle in degrees
         }]
@@ -203,10 +203,10 @@ foreach ($TabCa as $row){
         id :'gaugeNeedle', afterDatasetDraw(chart, args,options){
             const {ctx, config, data, chartArea:{top,bottom,left,right,width,height}} =chart;
             ctx.save();
-            console.log(data);
+          //  console.log(data);
 
             const needleValue =data.datasets[0].needleValue ;
-            console.log(needleValue)
+          //  console.log(needleValue)
             const dataTotal = data.datasets[0].data.reduce((a, b) => a + b, 0);
             //console.log(dataTotal)
             const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI);
