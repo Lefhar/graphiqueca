@@ -170,30 +170,30 @@ foreach ($TabCa as $row){
                         }
                     }
                 }
-            }}
+            }
+        }
     });
 
 
 
     // setup
     const data = {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        labels: ['Chiffre d\'affaire', 'Objectif presque atteint', 'Objectif atteint'],
         type: 'doughnut',
         datasets: [{
             label: 'Weekly Sales',
-            data: [18, 12, 6],
+            data: [90, 95,100],
             backgroundColor: [
-                'rgba(255, 26, 104, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(0, 0, 0, 0.2)'
+                'rgba(54, 162, 235)',
+                'rgb(250,82,56)',
+                'rgb(52,232,55)',
+
+
             ],
+
             borderColor: 'white',
-            borderWidth: 2,
-            needleValue : 34,
+            borderWidth: 4,
+            needleValue : 80,
             cutout :'95%',
             rotation: 270, // start angle in degrees
             circumference: 180, // sweep angle in degrees
@@ -203,9 +203,10 @@ foreach ($TabCa as $row){
         id :'gaugeNeedle', afterDatasetDraw(chart, args,options){
             const {ctx, config, data, chartArea:{top,bottom,left,right,width,height}} =chart;
             ctx.save();
-            // console.log(data)
-            const needleValue = data.datasets[0].needleValue;
-           // console.log(needleValue)
+            console.log(data);
+
+            const needleValue =data.datasets[0].needleValue ;
+            console.log(needleValue)
             const dataTotal = data.datasets[0].data.reduce((a, b) => a + b, 0);
             //console.log(dataTotal)
             const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI);
@@ -215,23 +216,23 @@ foreach ($TabCa as $row){
             // var cx = cw / 2;
             // var cy = ch - 6;
             //console.log(angle)
-            console.log(ctx.canvas.offsetTop)
+          //  console.log(ctx.canvas.offsetTop)
 
             const cx = width /2;
             const cy = chart._metasets[0].data[0].y;
             ctx.translate(cx,cy);
             ctx.rotate(angle);
             ctx.beginPath();
-            ctx.moveTo(0,-2);
+            ctx.moveTo(5,-6);
             ctx.lineTo(ctx.canvas.offsetTop - height +250 , 0);
-            ctx.lineTo(0,2);
+            ctx.lineTo(4,6);
             ctx.fillStyle = '#444';
             ctx.fill();
 
             //needle dot
             ctx.translate(-cx,-cy);
             ctx.beginPath();
-            ctx.arc(cx,cy,5,0,10);
+            ctx.arc(cx,cy,8,0,9);
             ctx.fill();
             ctx.restore();
         }
@@ -244,7 +245,21 @@ foreach ($TabCa as $row){
 
 
         },
-        plugins: [gaugeNeedle]
+        plugins: [gaugeNeedle],tooltip: {
+            callbacks: {
+                label: function(context) {
+                    var label = context.dataset.label || '';
+
+                    if (label) {
+                        label += ': ';
+                    }
+                    if (context.parsed.y !== null) {
+                        label += new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(context.parsed.x);
+                    }
+                    return label;
+                }
+            }
+        }
     };
 
 
