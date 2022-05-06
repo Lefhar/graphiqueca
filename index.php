@@ -89,10 +89,6 @@ foreach ($TabCa as $row){
                 data: [<?php foreach ($TabMoyenne as $row){?>
                     <?=$row;?>,
                     <?php }?>],
-
-
-
-
                 backgroundColor: '#ed7d31',
                 borderColor: '#ed7d31',
                 type: 'line',
@@ -175,26 +171,25 @@ foreach ($TabCa as $row){
     });
 
 
-
-    // setup
+    // Configuration des données
     const data = {
-        labels: ['Chiffre d\'affaire', 'Objectif presque atteint', 'Objectif atteint'],
+        labels: ['Objectif non atteint','Objectif presque atteint','Objectif atteint' ],
         type: 'doughnut',
         datasets: [{
             label: 'Weekly Sales',
-            data: [800000, 800000,1000000],
+            data: [70, 20,10],
             backgroundColor: [
-                'rgba(54, 162, 235)',
-                'rgb(250,82,56)',
-                'rgb(52,232,55)',
+                'rgb(215,6,6)',
 
+                'rgb(255,102,0)',
+                'rgb(52,232,55)',
 
             ],
 
             borderColor: 'white',
             borderWidth: 4,
-            needleValue : 840000,
-            cutout :'80%',
+            needleValue : 75,
+            cutout :'60%',
             rotation: 270, // start angle in degrees
             circumference: 180, // sweep angle in degrees
         }]
@@ -211,30 +206,29 @@ foreach ($TabCa as $row){
             //console.log(dataTotal)
             const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI);
 
-            // var cw = chart.chart.canvas.offsetWidth;
-            // var ch = chart.chart.canvas.offsetHeight;
-            // var cx = cw / 2;
-            // var cy = ch - 6;
-            //console.log(angle)
-          //  console.log(ctx.canvas.offsetTop)
 
             const cx = width /2;
             const cy = chart._metasets[0].data[0].y;
             ctx.translate(cx,cy);
             ctx.rotate(angle);
             ctx.beginPath();
-            ctx.moveTo(5,-6);
-            ctx.lineTo(ctx.canvas.offsetTop - height +250 , 0);
-            ctx.lineTo(4,6);
+            ctx.moveTo(13,-16);
+            ctx.lineTo(ctx.canvas.offsetTop - height +280 , 0);
+            ctx.lineTo(14,17);
             ctx.fillStyle = '#444';
             ctx.fill();
 
             //needle dot
             ctx.translate(-cx,-cy);
             ctx.beginPath();
-            ctx.arc(cx,cy,8,0,9);
+            ctx.arc(cx,cy,26,0,30);
             ctx.fill();
             ctx.restore();
+
+            ctx.font ='50px Helvetica';
+            ctx.fillStyle="#444";
+            ctx.fillText(needleValue+'%',cx-40,cy + 60);
+
         }
     }
     // config
